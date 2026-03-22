@@ -1,6 +1,6 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
-  "dockerfilePath": "Dockerfile",
+  "dockerfilePath": "SupportTicketAPI/Dockerfile",
   "build": {
     "builder": "NIXPACKS"
   },
