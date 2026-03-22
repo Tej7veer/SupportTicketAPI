@@ -60,7 +60,8 @@ builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddSingleton<JwtService>();
 
 var app = builder.Build();
-
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://*:{port}");
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support Ticket API v1"));
 app.UseCors();
