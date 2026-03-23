@@ -64,14 +64,7 @@ builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddSingleton<JwtService>();
 
 // ── Port Configuration for Railway ───────────────────────────
-var port = Environment.GetEnvironmentVariable("PORT")
-        ?? Environment.GetEnvironmentVariable("ASPNETCORE_URLS")
-        ?? "8080";
 
-if (port.StartsWith("http"))
-    builder.WebHost.UseUrls(port);
-else
-    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 // ── Build App ─────────────────────────────────────────────────
 var app = builder.Build();
 
