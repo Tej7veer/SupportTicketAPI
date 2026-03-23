@@ -52,12 +52,12 @@ builder.Services.AddAuthorization();
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(p =>
     p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-builder.Services.AddSingleton<DatabaseContext>();
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<TicketRepository>();
-builder.Services.AddScoped<HistoryRepository>();
-builder.Services.AddScoped<CommentRepository>();
-builder.Services.AddSingleton<JwtService>();
+//builder.Services.AddSingleton<DatabaseContext>();
+//builder.Services.AddScoped<UserRepository>();
+//builder.Services.AddScoped<TicketRepository>();
+//builder.Services.AddScoped<HistoryRepository>();
+//builder.Services.AddScoped<CommentRepository>();
+//builder.Services.AddSingleton<JwtService>();
 
 var app = builder.Build();
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
