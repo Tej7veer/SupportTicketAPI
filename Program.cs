@@ -2,11 +2,11 @@
 using Microsoft.IdentityModel.Tokens;
 using SupportTicketAPI.Data;
 using SupportTicketAPI.Services;
-using System.Diagnostics;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ── Controllers & Swagger ─────────────────────────────────────
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -30,6 +30,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// ── JWT Authentication ────────────────────────────────────────
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
 
@@ -49,9 +50,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+
+// ── CORS ──────────────────────────────────────────────────────
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(p =>
     p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
+// ── DI Registrations ─────────────────────────────────────────
 builder.Services.AddSingleton<DatabaseContext>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<TicketRepository>();
@@ -59,12 +63,14 @@ builder.Services.AddScoped<HistoryRepository>();
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddSingleton<JwtService>();
 
-var app = builder.Build();
+// ── Port Configuration for Railway ───────────────────────────
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
-app.Urls.Clear();
-app.Urls.Add($"http://*:{port}");
+// ── Build App ─────────────────────────────────────────────────
+var app = builder.Build();
 
+// ── Middleware Pipeline ───────────────────────────────────────
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support Ticket API v1"));
 app.UseCors();
