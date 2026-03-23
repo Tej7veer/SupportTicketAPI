@@ -5,4 +5,4 @@ nixPkgs = ["dotnet-sdk_8"]
 cmds = ["dotnet publish -c Release -o out"]
 
 [start]
-cmd = "dotnet out/SupportTicketAPI.dll"
+cmd = "ASPNETCORE_URLS=http://0.0.0.0:$PORT dotnet out/SupportTicketAPI.dll"
