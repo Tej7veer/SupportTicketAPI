@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SupportTicketAPI.Data;
 using SupportTicketAPI.Services;
@@ -52,12 +52,12 @@ builder.Services.AddAuthorization();
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(p =>
     p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-//builder.Services.AddSingleton<DatabaseContext>();
-//builder.Services.AddScoped<UserRepository>();
-//builder.Services.AddScoped<TicketRepository>();
-//builder.Services.AddScoped<HistoryRepository>();
-//builder.Services.AddScoped<CommentRepository>();
-//builder.Services.AddSingleton<JwtService>();
+builder.Services.AddSingleton<DatabaseContext>();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<TicketRepository>();
+builder.Services.AddScoped<HistoryRepository>();
+builder.Services.AddScoped<CommentRepository>();
+builder.Services.AddSingleton<JwtService>();
 
 var app = builder.Build();
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
@@ -65,6 +65,7 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Clear();
 app.Urls.Add($"http://*:{port}");
 
+app.MapGet("/", () => "API is running 🚀");
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support Ticket API v1"));
 app.UseCors();
