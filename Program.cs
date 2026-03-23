@@ -69,16 +69,23 @@ builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddSingleton<JwtService>();
 
 var app = builder.Build();
+
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 
 app.Urls.Clear();
 app.Urls.Add($"http://0.0.0.0:{port}");
 
+app.UseRouting(); // 🔥 ADD THIS
+
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support Ticket API v1"));
+
 app.UseCors();
+
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapGet("/", () => "API is running 🚀"); // health check
 app.MapControllers();
-app.MapGet("/", () => "API is running 🚀");
+
 app.Run();
