@@ -1,20 +1,7 @@
 ﻿var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers();
-
 var app = builder.Build();
 
-// 🔥 REQUIRED PIPELINE ORDER
-app.UseRouting();
-
-app.UseEndpoints(endpoints =>
+app.Run(async context =>
 {
-    endpoints.MapGet("/", async context =>
-    {
-        await context.Response.WriteAsync("API is running 🚀");
-    });
-
-    endpoints.MapControllers();
+    await context.Response.WriteAsync("Hello from Railway 🚀");
 });
-
-app.Run();
