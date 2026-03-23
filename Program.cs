@@ -31,24 +31,33 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
+var secretKey = jwtSettings["SecretKey"];
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
+if (!string.IsNullOrEmpty(secretKey))
+{
+    var key = Encoding.UTF8.GetBytes(secretKey);
+
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings["Issuer"],
-            ValidAudience = jwtSettings["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(key)
-        };
-    });
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtSettings["Issuer"],
+                ValidAudience = jwtSettings["Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(key)
+            };
+        });
 
-builder.Services.AddAuthorization();
+    builder.Services.AddAuthorization();
+}
+else
+{
+    Console.WriteLine("⚠️ JWT not configured — skipping authentication");
+}
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(p =>
     p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
@@ -65,12 +74,11 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Clear();
 app.Urls.Add($"http://*:{port}");
 
-app.MapGet("/", () => "API is running 🚀");
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support Ticket API v1"));
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
+app.MapGet("/", () => "API is running 🚀");
 app.Run();
