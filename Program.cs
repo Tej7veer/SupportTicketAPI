@@ -70,10 +70,10 @@ builder.Services.AddSingleton<JwtService>();
 
 var app = builder.Build();
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+//var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 
-app.Urls.Clear();
-app.Urls.Add($"http://0.0.0.0:{port}");
+//app.Urls.Clear();
+//app.Urls.Add($"http://0.0.0.0:{port}");
 
 app.UseRouting(); // 🔥 ADD THIS
 
